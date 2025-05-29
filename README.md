@@ -433,6 +433,7 @@ Hasil skor risiko kemudian dinormalisasi ke rentang 0–1 menggunakan `MinMaxSca
 
 ### 4.7 Encoding Nama dan Kategori untuk Collaborative Filtering
 Untuk membangun sistem rekomendasi berbasis *collaborative filtering*, fitur kategorikal seperti `nama` dan `kategori` perlu diubah menjadi bentuk numerik melalui **Label Encoding**. Ini dilakukan agar data dapat digunakan dalam model machine learning dan matriks interaksi pengguna-item.
+
 ![image](https://github.com/user-attachments/assets/2b0ba377-185e-4b41-8757-ddd90464afcc)
 ![image](https://github.com/user-attachments/assets/cc44802d-5401-40d8-9025-1d1c14cdcaed)
 
