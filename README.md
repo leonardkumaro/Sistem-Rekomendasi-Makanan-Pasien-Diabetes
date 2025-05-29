@@ -458,9 +458,10 @@ Model Content-Based Filtering menggunakan metrik **precision** sebagai alat eval
 
 Berikut adalah rumus metrik evaluasi yang digunakan:
 
-\[ P = \frac{\# \text{ of our recommendations that are relevant}}{\# \text{ of items we recommended}} \]
+P = Jumlah rekomendasi yang relevan/Jumlah item yang direkomendasikan
 
 Hasil ini menunjukkan bahwa model Content-Based Filtering cukup andal dalam menyajikan makanan yang sesuai berdasarkan kandungan nutrisinya, terutama gula, yang menjadi faktor penting bagi pasien diabetes.
+![alt text](image-16.png)
 
 ### Collaborative Filtering
 
@@ -468,7 +469,7 @@ Sementara itu, model Collaborative Filtering dalam proyek ini menggunakan metrik
 
 Berikut merupakan rumus RMSE:
 
-![alt text](image-13.png)
+![alt text](image-14.png)
 
 Keterangan:
 - **RMSE**: Nilai akar dari rata-rata kuadrat selisih antara prediksi dan nilai observasi.
@@ -483,6 +484,7 @@ Berikut ini adalah visualisasi dari nilai RMSE yang dihasilkan selama proses eva
 ![alt text](image-12.png)
 
 Dengan demikian, model Collaborative Filtering mampu memberikan prediksi yang cukup akurat terhadap makanan yang sesuai untuk pasien diabetes berdasarkan skor risiko, memperkuat kualitas rekomendasi yang tidak hanya serupa dari sisi fitur, tetapi juga relevan dengan kondisi personal pasien.
+![alt text](image-15.png)
 
 ## 7. Kesimpulan
 
