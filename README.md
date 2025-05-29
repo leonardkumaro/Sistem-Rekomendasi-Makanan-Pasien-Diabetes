@@ -285,7 +285,8 @@ Pendekatan sistematis dalam pengembangan sistem rekomendasi makanan berbasis dat
   - `Gula (g)`
   - `Sodium (g)`
   - `Kalium (g)`
-- **TIpe Data**: (![alt text](image.png))
+- **TIpe Data**:
+  ![image](https://github.com/user-attachments/assets/ecd90d5f-4c26-4765-a689-e6b7df31cdc7)
 - **Jumlah Nilai yang Hilang**: ![alt text](image-1.png)
 - **Jumlah Nilai Duplikat**: ![alt text](image-2.png)
 
