@@ -458,7 +458,7 @@ Model Content-Based Filtering menggunakan metrik **precision** sebagai alat eval
 
 Berikut adalah rumus metrik evaluasi yang digunakan:
 
-![alt text](image-11.png)
+\[ P = \frac{\# \text{ of our recommendations that are relevant}}{\# \text{ of items we recommended}} \]
 
 Hasil ini menunjukkan bahwa model Content-Based Filtering cukup andal dalam menyajikan makanan yang sesuai berdasarkan kandungan nutrisinya, terutama gula, yang menjadi faktor penting bagi pasien diabetes.
 
