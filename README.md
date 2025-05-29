@@ -287,12 +287,14 @@ Pendekatan sistematis dalam pengembangan sistem rekomendasi makanan berbasis dat
   - `Kalium (g)`
 - **TIpe Data**:
   ![image](https://github.com/user-attachments/assets/ecd90d5f-4c26-4765-a689-e6b7df31cdc7)
-- **Jumlah Nilai yang Hilang**: ![alt text](image-1.png)
-- **Jumlah Nilai Duplikat**: ![alt text](image-2.png)
+- **Jumlah Nilai yang Hilang**:
+  ![image](https://github.com/user-attachments/assets/a36517ad-1f46-4cc6-8575-0447cd848a6f)
+- **Jumlah Nilai Duplikat**:
+  ![image](https://github.com/user-attachments/assets/ac097ca7-8437-40e7-83b7-6fafcd2674ee)
 
 ### Univariate Exploratory Data Analysis
 
-![alt text](image-3.png)
+![image](https://github.com/user-attachments/assets/95221903-7b90-4aff-8b32-8ffb84d59d08)
 
 Berdasarkan plot di atas diperoleh:
 
@@ -305,6 +307,7 @@ Berdasarkan plot di atas diperoleh:
   - **Kacang-Kacangan**, **Sup**, dan **Telur** muncul dalam jumlah terbatas. Ini bisa menjadi indikasi bahwa representasi makanan dari kategori ini perlu ditambahkan untuk memperkaya sistem rekomendasi dan meningkatkan variasi.
 
 ### Interpretasi Univariate EDA: Fitur Nutrisi
+![image](https://github.com/user-attachments/assets/e22deb57-a5d1-4332-a412-ecc1d538dd1f)
 
 Visualisasi distribusi berikut menggambarkan pola persebaran setiap atribut numerik dalam dataset rekomendasi makanan untuk penderita Diabetes Mellitus.
 
@@ -362,7 +365,8 @@ Korelasi Antar Fitur Numerik
 
 Korelasi dihitung menggunakan Pearson correlation coefficient dan divisualisasikan dalam bentuk **heatmap**.
 
-![alt text](image-5.png)
+![image](https://github.com/user-attachments/assets/9014f8b7-cebb-4cb3-8dd1-39d3bfc76531)
+
 
 1. **Korelasi Tinggi (r > 0.70)**
 
@@ -399,17 +403,43 @@ Korelasi ini dapat dimanfaatkan untuk:
 
 ## 4. Data Preparation
 
-### Menghapus Kolom yang Tidak Diperlukan
+### 4.1 Menghapus Kolom yang Tidak Diperlukan
+Pada tahap awal, dilakukan penghapusan terhadap kolom-kolom yang tidak dibutuhkan dalam proses pemodelan sistem rekomendasi. Kolom seperti `Id`, `Jumlah Porsi`, dan `Takaran Porsi` dihapus karena tidak memiliki kontribusi signifikan terhadap analisis maupun proses pembelajaran model.
 
-![alt text](image-6.png)
+### 4.2 Menstandarkan Nama Kategori
+Beberapa nama kategori makanan memiliki ejaan atau istilah yang bervariasi. Untuk menyederhanakan dan menghindari duplikasi semantik dalam proses TF-IDF Vectorization, dilakukan penyesuaian terhadap nama kategori:
+- `'Buah Buahan'` diubah menjadi `'Buah'`
+- `'Ikan & Seafood'` menjadi `'Ikan'`
+- `'Kacang Kacangan'` menjadi `'Kacang'`
+- `'Snack (Makanan Ringan)'` menjadi `'Camilan'`
 
-### Mengetahui Jumlah Kategori
+Transformasi ini dilakukan agar kategori memiliki representasi yang lebih konsisten.
 
-![alt text](image-7.png)
+### 4.3 Sorting Data Berdasarkan Nama
+Data makanan diurutkan berdasarkan kolom `nama` untuk menjaga keteraturan dan memudahkan proses identifikasi saat dilakukan transformasi atau pencarian data berdasarkan nama tertentu.
 
-### Mengonversi Data Menjadi dalam Bentuk List
+### 4.4 Membuat DataFrame Baru
+Untuk menjaga data asli tetap utuh dan memudahkan proses eksplorasi serta pemodelan, dibuat beberapa *DataFrame* turunan, antara lain:
+- `foodsnew`: Data makanan yang telah dibersihkan dan disederhanakan kategorinya.
+- `allfoodsdf`: Data makanan lengkap yang telah ditambahkan fitur risiko dan hasil normalisasi.
 
-![alt text](image-8.png)
+### 4.5 TF-IDF Vectorization untuk Content-Based Filtering
+Dilakukan proses *vectorization* pada kolom `kategori` menggunakan `TfidfVectorizer` dari `sklearn.feature_extraction.text`. Hasil vektorisasi kemudian digunakan untuk menghitung **cosine similarity** antar makanan yang memiliki kategori serupa.
+
+### 4.6 Perhitungan Skor Risiko dan Normalisasi
+Dalam konteks penderita diabetes, fitur-fitur nutrisi seperti **gula**, **karbohidrat**, **lemak**, dan **kalori** dapat menjadi indikator risiko. Maka dari itu, dilakukan perhitungan skor risiko mentah sebagai agregat terarah dari fitur-fitur tersebut. 
+
+Hasil skor risiko kemudian dinormalisasi ke rentang 0–1 menggunakan `MinMaxScaler` dari `sklearn.preprocessing`, agar dapat digunakan sebagai pembobot dalam sistem rekomendasi.
+
+### 4.7 Encoding Nama dan Kategori untuk Collaborative Filtering
+Untuk membangun sistem rekomendasi berbasis *collaborative filtering*, fitur kategorikal seperti `nama` dan `kategori` perlu diubah menjadi bentuk numerik melalui **Label Encoding**. Ini dilakukan agar data dapat digunakan dalam model machine learning dan matriks interaksi pengguna-item.
+![image](https://github.com/user-attachments/assets/2b0ba377-185e-4b41-8757-ddd90464afcc)
+![image](https://github.com/user-attachments/assets/cc44802d-5401-40d8-9025-1d1c14cdcaed)
+
+### 4.8 Splitting Data untuk Collaborative Filtering
+
+Setelah melakukan encoding pada fitur kategorikal seperti `nama` dan `kategori`, data perlu dipisahkan ke dalam dua bagian, yaitu data latih (training set) dan data validasi (validation set). Hal ini bertujuan untuk mengevaluasi performa model collaborative filtering secara objektif.
+![image](https://github.com/user-attachments/assets/aa21a0b6-b46b-4148-89f0-9ec8a39cc61e)
 
 ## 5. Modeling
 
@@ -429,7 +459,8 @@ Sistem ini sangat berguna dalam memberikan saran makanan yang serupa dengan pref
 
 Dengan pendekatan ini, sistem rekomendasi menjadi lebih cerdas dan spesifik terhadap kebutuhan pasien diabetes. Ini menunjukkan bahwa Content-Based Filtering tidak hanya terbatas pada pencocokan fitur, tetapi dapat dioptimalkan dengan logika tambahan yang relevan terhadap konteks medis atau diet khusus.
 
-![alt text](image-9.png)
+![image](https://github.com/user-attachments/assets/d7b594d9-5f3d-41e6-abec-fe377726a916)
+
 
 ### Collaborative Filtering
 
@@ -447,7 +478,7 @@ Keunggulan dari pendekatan ini adalah kemampuannya untuk memberikan saran yang b
 
 Dengan demikian, fungsi `rekomendasi_makanan()` merupakan implementasi sederhana namun efektif dari Collaborative Filtering berbasis user condition, yang mampu memperkuat sistem rekomendasi dengan mempertimbangkan dimensi personalisasi yang lebih kontekstual.
 
-![alt text](image-10.png)
+![image](https://github.com/user-attachments/assets/a3bd8427-6b49-42bf-9d0c-7f016cc79d4b)
 
 ## 6. Evaluation
 
@@ -462,7 +493,8 @@ Berikut adalah rumus metrik evaluasi yang digunakan:
 P = Jumlah rekomendasi yang relevan/Jumlah item yang direkomendasikan
 
 Hasil ini menunjukkan bahwa model Content-Based Filtering cukup andal dalam menyajikan makanan yang sesuai berdasarkan kandungan nutrisinya, terutama gula, yang menjadi faktor penting bagi pasien diabetes.
-![alt text](image-16.png)
+![image](https://github.com/user-attachments/assets/0c4f498f-86f9-464c-9ac5-b850abbd265e)
+
 
 ### Collaborative Filtering
 
@@ -470,7 +502,8 @@ Sementara itu, model Collaborative Filtering dalam proyek ini menggunakan metrik
 
 Berikut merupakan rumus RMSE:
 
-![alt text](image-14.png)
+![image](https://github.com/user-attachments/assets/c279967f-4747-448e-9647-3d75317eb90b)
+
 
 Keterangan:
 - **RMSE**: Nilai akar dari rata-rata kuadrat selisih antara prediksi dan nilai observasi.
@@ -481,11 +514,13 @@ Keterangan:
 Dalam praktiknya, RMSE dihitung dengan mengambil selisih kuadrat antara skor risiko aktual dan skor prediksi untuk setiap makanan, kemudian mengambil rata-rata dan akar kuadrat dari nilai tersebut. Nilai RMSE yang lebih rendah menandakan bahwa prediksi model semakin mendekati nilai aktual, dan dengan demikian model dianggap semakin akurat.
 
 Berikut ini adalah visualisasi dari nilai RMSE yang dihasilkan selama proses evaluasi model:
+![image](https://github.com/user-attachments/assets/3b2e570b-08a5-487a-a48d-798fc27bce15)
+Setelah melakukan pelatihan model, melihat plot metrik RMSE yang menunjukkan kinerja model dalam bentuk grafik. Dari plot tersebut, dapat terlihat bahwa model menghasilkan nilai RMSE sebesar 0.1134 pada train dan 0.2892 pada validation. Angka ini menunjukkan bahwa kinerja model sudah cukup baik, karena nilai RMSE yang lebih rendah menunjukkan kesalahan yang lebih kecil dalam prediksi.
 
-![alt text](image-12.png)
 
 Dengan demikian, model Collaborative Filtering mampu memberikan prediksi yang cukup akurat terhadap makanan yang sesuai untuk pasien diabetes berdasarkan skor risiko, memperkuat kualitas rekomendasi yang tidak hanya serupa dari sisi fitur, tetapi juga relevan dengan kondisi personal pasien.
-![alt text](image-15.png)
+![image](https://github.com/user-attachments/assets/bbcfcdf6-e5a7-4f2d-8720-48b90062bae2)
+
 
 ## 7. Kesimpulan
 
